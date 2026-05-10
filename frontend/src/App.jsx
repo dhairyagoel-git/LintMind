@@ -17,7 +17,7 @@ function App() {
   async function reviewCode() {
 
     const response = await axios.post(
-      'http://localhost:3000/ai/get-review',
+      'https://lintmind.onrender.com/ai/get-review',
       { code }
     )
 
