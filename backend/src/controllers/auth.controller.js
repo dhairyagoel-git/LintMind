@@ -134,7 +134,7 @@ module.exports.google = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        token,  
+        token,
       },
     });
   } catch (err) {
@@ -143,6 +143,91 @@ module.exports.google = async (req, res) => {
     res.status(400).json({
       success: false,
       message: "Invalid token",
+    });
+  }
+};
+
+const axios = require("axios");
+
+module.exports.github = async (req, res) => {
+  try {
+    const { code } = req.body;
+
+    const tokenResponse = await axios.post(
+      "https://github.com/login/oauth/access_token",
+      {
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        code,
+      },
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      },
+    );
+
+    const accessToken = tokenResponse.data.access_token;
+
+    const githubUser = await axios.get("https://api.github.com/user", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const emailResponse = await axios.get(
+      "https://api.github.com/user/emails",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    const primaryEmail = emailResponse.data.find(
+      (e) => e.primary && e.verified,
+    )?.email;
+    if (!primaryEmail) {
+      return res.status(400).json({
+        success: false,
+        message: "GitHub account has no public email",
+      });
+    }
+
+    const { id: githubId, name, login } = githubUser.data;
+
+    let user = await User.findOne({
+      email: primaryEmail,
+    });
+
+    if (!user) {
+      user = await User.create({
+        name: name || login,
+        email: primaryEmail,
+        githubId: githubId.toString(),
+      });
+    } else if (!user.githubId) {
+      user.githubId = githubId.toString();
+      await user.save();
+    }
+
+    const token = generateToken(user._id);
+
+    res.json({
+      success: true,
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        token,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+
+    res.status(400).json({
+      success: false,
+      message: "GitHub login failed",
     });
   }
 };

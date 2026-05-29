@@ -5,6 +5,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import { GoogleLogin } from "@react-oauth/google";
+import GoogleBtn from "../components/GoogleLogin";
+import GithubBtn from "../components/GithubLogin";
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -159,35 +161,13 @@ const AuthPage = () => {
                   ? "Login"
                   : "Create Account"}
             </button>
-            <GoogleLogin
-              onSuccess={async (credentialResponse) => {
-                const res = await axios.post(
-                  `${import.meta.env.VITE_APP_URL}/auth/google`,
-                  {
-                    credential: credentialResponse.credential,
-                  },
-                );
 
-                const user = res.data.data;
-
-                localStorage.setItem("token", user.token);
-
-                localStorage.setItem(
-                  "user",
-                  JSON.stringify({
-                    _id: user._id,
-                    name: user.name,
-                    email: user.email,
-                  }),
-                );
-
-                navigate("/");
-              }}
-              onError={() => {
-                console.log("Login Failed");
-              }}
-            />
+            <div className="auth-divider">
+              <span>OR</span>
+            </div>
           </form>
+          <GoogleBtn />
+          <GithubBtn />
         </div>
       </div>
     </>

@@ -5,10 +5,12 @@ const authRoutes = require("./routes/auth.routes");
 const cors = require("cors")
 const app = express()
 const connectDB = require('./config/db');
+const passport = require("./config/passport");
 app.use(cors())
 
 
 app.use(express.json());  
+app.use(passport.initialize());
 connectDB();
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -25,6 +27,7 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);  
+
 app.get('/',(req,res)=>{
     res.send("working")
 })
