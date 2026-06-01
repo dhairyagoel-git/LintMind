@@ -63,7 +63,24 @@ main {
 .review:hover {
   background-color: #dcdcdc;
 }
-
+/* Save code */
+.save-code {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 0.4rem 1rem;
+  border: none;
+  border-radius: 5px;
+  background-color: red;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  z-index: 10000;
+}
+.save-code:hover {
+  background-color: #a84242;
+}
 /* RIGHT PANEL */
 
 .right {
@@ -428,5 +445,143 @@ main {
   }
   .brand-name {
     font-size: 1rem;
+  }
+}
+
+/* Modal css */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  z-index: 99999;
+}
+
+.save-modal {
+  width: 600px;
+  margin-top: 80px;
+
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 12px;
+
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: .8rem 1.5rem;
+
+  border-bottom: 1px solid #333;
+}
+
+.modal-header h2 {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+
+  color: #999;
+  font-size: 2rem;
+
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: white;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-body label {
+  display: block;
+
+  width: 100%;
+  text-align: left;
+
+  margin-bottom: 0.8rem;
+
+  color: white;
+  font-weight: 600;
+} 
+
+.modal-body input {
+  width: 100%;
+
+  padding: 0.9rem;
+
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 8px;
+
+  color: white;
+  font-size: 1rem;
+}
+
+.modal-body input:focus {
+  outline: none;
+  border-color: #5a8cff;
+}
+
+.modal-actions {
+  margin-top: 1.5rem;
+}
+
+.modal-actions button {
+  padding: 0.8rem 1.8rem;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: black;
+
+  cursor: pointer;
+  font-weight: 600;
+}
+/* modal slide animation */
+.modal-slide-down {
+  animation: slideDown 0.3s ease forwards;
+}
+
+.modal-slide-up {
+  animation: slideUp 0.3s ease forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-120px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-120px);
   }
 }

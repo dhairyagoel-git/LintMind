@@ -79,6 +79,7 @@ const Navbar = () => {
                   <span className="avatar-lg">
                     {user?.name?.charAt(0).toUpperCase()}
                   </span>
+
                   <div>
                     <p className="dropdown-name">
                       {user?.name
@@ -90,12 +91,25 @@ const Navbar = () => {
                         )
                         .join(" ")}
                     </p>
+
                     <p className="dropdown-email">{user?.email}</p>
                   </div>
                 </div>
+
                 <hr className="dropdown-divider" />
+
+                <button
+                  className="dropdown-item"
+                  onClick={() => {
+                    navigate("/history");
+                    setMenuOpen(false);
+                  }}
+                >
+                  View History
+                </button>
+
                 <button className="dropdown-item" onClick={logout}>
-                  <span>🚪</span> Logout
+                  Logout
                 </button>
               </div>
             )}

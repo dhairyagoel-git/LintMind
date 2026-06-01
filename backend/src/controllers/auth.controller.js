@@ -10,13 +10,13 @@ const generateToken = (id) => {
 // @desc    Register a new user
 // @route   POST /api/auth/signup
 // @access  Public
-module.exports.signup = async (req, res, next) => {
+module.exports.signup = async (req, res, next) => { 
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ success: false, errors: errors.array() });
     }
-
+      
     const { name, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });

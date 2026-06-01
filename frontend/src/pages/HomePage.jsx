@@ -5,16 +5,24 @@ import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
 import axios from "axios";
 import "../App.css";
-import Navbar from "../components/Navbar";
+import { useLocation } from "react-router-dom";
+// import Navbar from "../components/Navbar";
 
 function HomePage() {
-  const [code, setCode] = useState(`function sum() {
+  const location = useLocation();
+  const [code, setCode] = useState(
+    location.state?.code ||
+      `function sum() {
   return 1 + 1
-}`);
+}`,
+  );
 
-  const [review, setReview] = useState("");
+  const [review, setReview] = useState(location.state?.review || "");
   const [loading, setLoading] = useState(false);
-  const [reviewed, setReviewed] = useState(false);
+  const [reviewed, setReviewed] = useState(!!location.state?.review);
+  const [showModal, setShowModal] = useState(false);
+  const [title, setTitle] = useState("");
+  const [closing, setClosing] = useState(false);
 
   async function reviewCode() {
     try {
@@ -35,7 +43,45 @@ function HomePage() {
       setLoading(false);
     }
   }
+  async function saveCode() {
+    try {
+      const token = localStorage.getItem("token");
 
+      const response = await axios.post(
+        `${import.meta.env.VITE_APP_URL}/review/save-review`,
+        {
+          title,
+          language: "javascript", 
+          code,
+          review,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      console.log(response.data);
+
+      setTitle("");
+      closeModal();
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+    }
+  }
+  function openTitleModal() {
+    setShowModal(true);
+    setClosing(false);
+  }
+  function closeModal() {
+    setClosing(true);
+
+    setTimeout(() => {
+      setShowModal(false);
+      setClosing(false);
+    }, 300);
+  }
   function handleCodeChange(value) {
     setCode(value);
 
@@ -44,7 +90,7 @@ function HomePage() {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <main>
         <div className="left">
           <div className="code">
@@ -63,7 +109,9 @@ function HomePage() {
               }}
             />
           </div>
-
+          <button className="save-code" onClick={openTitleModal}>
+            Save Code
+          </button>
           <button
             onClick={reviewCode}
             className="review"
@@ -84,6 +132,38 @@ function HomePage() {
           )}
         </div>
       </main>
+      {showModal && (
+        <div className="modal-overlay">
+          <div
+            className={`save-modal ${
+              closing ? "modal-slide-up" : "modal-slide-down"
+            }`}
+          >
+            <div className="modal-header">
+              <h2>Save Code</h2>
+
+              <button className="close-btn" onClick={closeModal}>
+                ×
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <label>Name of the project</label>
+
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Enter title..."
+              />
+
+              <div className="modal-actions">
+                <button onClick={saveCode}>Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
