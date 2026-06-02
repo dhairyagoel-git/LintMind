@@ -22,7 +22,13 @@ main {
   padding: 1rem;
 }
 
-.left,
+.left {
+  flex: 1.5;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
 .right {
   flex: 1;
   height: 100%;
@@ -646,4 +652,20 @@ main {
 
   text-align: left;
   white-space: pre-wrap;
+}
+.language-select {
+  position: absolute;
+  top: 20px;
+  right: 260px;
+
+  background: #1e1e1e;
+  color: white;
+
+  border: 1px solid #444;
+  border-radius: 5px;
+
+  padding: 0.4rem 0.8rem;
+
+  z-index: 10000;
+  cursor: pointer;
 }

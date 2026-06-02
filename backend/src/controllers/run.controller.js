@@ -7,6 +7,7 @@ module.exports.runCode = async (req, res) => {
       java: 62,
       python: 71,
       javascript: 63,
+      c: 50
     };
 
     const { code, language } = req.body;

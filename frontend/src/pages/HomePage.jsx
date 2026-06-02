@@ -12,8 +12,12 @@ function HomePage() {
   const location = useLocation();
   const [code, setCode] = useState(
     location.state?.code ||
-      `function sum() {
-  return 1 + 1
+      `#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    cout << "Hello World";
+    return 0;
 }`,
   );
 
@@ -24,7 +28,32 @@ function HomePage() {
   const [title, setTitle] = useState("");
   const [closing, setClosing] = useState(false);
   const [output, setOutput] = useState("");
+  const [language, setLanguage] = useState("cpp");
 
+  const languageTemplates = {
+    cpp: `#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    cout << "Hello World";
+    return 0;
+}`,
+
+    c: `#include <stdio.h>
+
+int main() {
+    printf("Hello World");
+    return 0;
+}`,
+
+    java: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}`,
+
+    python: `print("Hello World")`,
+  };
   async function reviewCode() {
     try {
       setLoading(true);
@@ -52,7 +81,7 @@ function HomePage() {
         `${import.meta.env.VITE_APP_URL}/review/save-review`,
         {
           title,
-          language: "javascript",
+          language,
           code,
           review,
         },
@@ -91,7 +120,7 @@ function HomePage() {
         `${import.meta.env.VITE_APP_URL}/run/run-code`,
         {
           code,
-          language: "javascript",
+          language,
         },
       );
 
@@ -115,7 +144,15 @@ function HomePage() {
             <div className="code">
               <Editor
                 height="100%"
-                defaultLanguage="javascript"
+                language={
+                  language === "cpp"
+                    ? "cpp"
+                    : language === "python"
+                      ? "python"
+                      : language === "java"
+                        ? "java"
+                        : "c"
+                }
                 theme="vs-dark"
                 value={code}
                 onChange={handleCodeChange}
@@ -137,6 +174,20 @@ function HomePage() {
               </pre>
             </div>
           </div>
+          <select
+            className="language-select"
+            value={language}
+            onChange={(e) => {
+              const newLanguage = e.target.value;
+              setLanguage(newLanguage);
+              setCode(languageTemplates[newLanguage]);
+            }}
+          >
+            <option value="cpp">C++</option>
+            <option value="c">C</option>
+            <option value="java">Java</option>
+            <option value="python">Python</option>
+          </select>
           <button className="run-code" onClick={runCode}>
             Run Code
           </button>
