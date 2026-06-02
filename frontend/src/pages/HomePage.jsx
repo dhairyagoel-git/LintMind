@@ -23,6 +23,7 @@ function HomePage() {
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
   const [closing, setClosing] = useState(false);
+  const [output, setOutput] = useState("");
 
   async function reviewCode() {
     try {
@@ -51,7 +52,7 @@ function HomePage() {
         `${import.meta.env.VITE_APP_URL}/review/save-review`,
         {
           title,
-          language: "javascript", 
+          language: "javascript",
           code,
           review,
         },
@@ -82,6 +83,23 @@ function HomePage() {
       setClosing(false);
     }, 300);
   }
+  async function runCode() {
+    try {
+      // const token = localStorage.getItem("token");
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_APP_URL}/run/run-code`,
+        {
+          code,
+          language: "javascript",
+        },
+      );
+
+      setOutput(response.data.stdout || response.data.stderr || "No output");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
   function handleCodeChange(value) {
     setCode(value);
 
@@ -93,22 +111,35 @@ function HomePage() {
       {/* <Navbar /> */}
       <main>
         <div className="left">
-          <div className="code">
-            <Editor
-              height="100%"
-              defaultLanguage="javascript"
-              theme="vs-dark"
-              value={code}
-              onChange={handleCodeChange}
-              options={{
-                fontSize: 16,
-                minimap: { enabled: false },
-                automaticLayout: true,
-                scrollBeyondLastLine: false,
-                wordWrap: "on",
-              }}
-            />
+          <div className="editor-container">
+            <div className="code">
+              <Editor
+                height="100%"
+                defaultLanguage="javascript"
+                theme="vs-dark"
+                value={code}
+                onChange={handleCodeChange}
+                options={{
+                  fontSize: 16,
+                  minimap: { enabled: false },
+                  automaticLayout: true,
+                  scrollBeyondLastLine: false,
+                  wordWrap: "on",
+                }}
+              />
+            </div>
+
+            <div className="output-panel">
+              <div className="output-header">Output</div>
+
+              <pre className="output-content">
+                {output || "Run your code to see output"}
+              </pre>
+            </div>
           </div>
+          <button className="run-code" onClick={runCode}>
+            Run Code
+          </button>
           <button className="save-code" onClick={openTitleModal}>
             Save Code
           </button>

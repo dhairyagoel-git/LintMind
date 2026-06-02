@@ -71,6 +71,21 @@ main {
   padding: 0.4rem 1rem;
   border: none;
   border-radius: 5px;
+  background-color: rgb(226, 142, 23);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  z-index: 10000;
+}
+/* run code button */
+.run-code {
+  position: absolute;
+  top: 20px;
+  right: 140px;
+  padding: 0.4rem 1rem;
+  border: none;
+  border-radius: 5px;
   background-color: red;
   color: white;
   font-weight: 600;
@@ -155,12 +170,12 @@ main {
   color: #ff7b72;
 }
 .right pre,
-.right code,
-.right p,
-.right li,
-/* .right h1, */
-/* .right h2,  */
-.right h3 {
+  .right code,
+  .right p,
+  .right li,
+  /* .right h1, */
+  /* .right h2,  */
+  .right h3 {
   text-align: left;
 }
 
@@ -478,7 +493,7 @@ main {
   justify-content: space-between;
   align-items: center;
 
-  padding: .8rem 1.5rem;
+  padding: 0.8rem 1.5rem;
 
   border-bottom: 1px solid #333;
 }
@@ -517,7 +532,7 @@ main {
 
   color: white;
   font-weight: 600;
-} 
+}
 
 .modal-body input {
   width: 100%;
@@ -584,4 +599,51 @@ main {
     opacity: 0;
     transform: translateY(-120px);
   }
+}
+
+.editor-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.code {
+  flex: 1;
+  min-height: 0;
+}
+
+.output-panel {
+  height: 180px;
+  background: #000;
+  border-top: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+}
+
+.output-header {
+  height: 35px;
+  background: #1e1e1e;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ddd;
+}
+
+.output-content {
+  flex: 1;
+  margin: 0;
+  padding: 12px;
+  overflow: auto;
+
+  background: #000;
+  color: #7cfc00;
+
+  font-family: Consolas, monospace;
+  font-size: 14px;
+
+  text-align: left;
+  white-space: pre-wrap;
 }
