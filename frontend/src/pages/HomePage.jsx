@@ -62,7 +62,6 @@ int main() {
   useEffect(() => {
     if (!editor || !monacoInstance) return;
 
-  
     const decorations = inlineComments.map((comment) => ({
       range: new monacoInstance.Range(comment.line, 1, comment.line, 1),
 
@@ -85,18 +84,30 @@ int main() {
     try {
       setLoading(true);
       setReview("");
-
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         `${import.meta.env.VITE_APP_URL}/ai/get-review`,
         { code, language },
+        {
+          headers: token
+            ? {
+                Authorization: `Bearer ${token}`,
+              }
+            : {},
+        },
       );
       // console.log(response.data.summary);
       setReview(response.data.summary);
       setInlineComments(response.data.inlineComments);
       console.log("Inline comments: ", response.data.inlineComments);
       setReviewed(true);
-    } catch (err) {
-      setReview("Error generating review.");
+    } catch (error) {
+      if (
+        error.response?.data?.message ===
+        "Guest limit reached. Please login to continue."
+      ) {
+        toast.error("Free limit reached. Login for unlimited reviews.");
+      }
     } finally {
       setLoading(false);
     }
