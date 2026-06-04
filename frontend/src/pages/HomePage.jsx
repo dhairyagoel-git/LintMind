@@ -6,6 +6,7 @@ import "highlight.js/styles/github-dark.css";
 import axios from "axios";
 import "../App.css";
 import { useLocation } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 // import Navbar from "../components/Navbar";
 
 function HomePage() {
@@ -123,6 +124,7 @@ int main() {
 
       setTitle("");
       closeModal();
+      toast.success("Code saved successfully!");
     } catch (error) {
       console.log(error.response?.data || error.message);
     }
@@ -283,6 +285,7 @@ int main() {
           </div>
         </div>
       )}
+      <Toaster position="bottom-right" />
     </>
   );
 }
