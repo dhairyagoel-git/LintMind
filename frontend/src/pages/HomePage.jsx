@@ -28,6 +28,7 @@ int main() {
   const [title, setTitle] = useState("");
   const [closing, setClosing] = useState(false);
   const [output, setOutput] = useState("");
+  const [loadingOutput, setLoadingOutput] = useState(false);
   const [language, setLanguage] = useState("cpp");
 
   const languageTemplates = {
@@ -61,7 +62,7 @@ int main() {
 
       const response = await axios.post(
         `${import.meta.env.VITE_APP_URL}/ai/get-review`,
-        { code },
+        { code ,language},
       );
 
       setReview(response.data);
@@ -115,7 +116,7 @@ int main() {
   async function runCode() {
     try {
       // const token = localStorage.getItem("token");
-
+      setLoadingOutput(true);
       const response = await axios.post(
         `${import.meta.env.VITE_APP_URL}/run/run-code`,
         {
@@ -125,6 +126,7 @@ int main() {
       );
 
       setOutput(response.data.stdout || response.data.stderr || "No output");
+      setLoadingOutput(false)
     } catch (error) {
       console.error("Error:", error);
     }
@@ -170,7 +172,11 @@ int main() {
               <div className="output-header">Output</div>
 
               <pre className="output-content">
-                {output || "Run your code to see output"}
+                {loadingOutput
+                  ? "Running...."
+                  : output
+                    ? output
+                    : "Run your code to see output"}
               </pre>
             </div>
           </div>

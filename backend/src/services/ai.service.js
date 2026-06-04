@@ -4,7 +4,7 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
-async function generateContent(code, language = "javascript") {
+async function generateContent(code, language ) {
 
   const chatCompletion = await groq.chat.completions.create({
     messages: [
