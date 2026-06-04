@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import Markdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
@@ -22,6 +22,7 @@ int main() {
   );
 
   const [review, setReview] = useState(location.state?.review || "");
+  const [inlineComments, setInlineComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [reviewed, setReviewed] = useState(!!location.state?.review);
   const [showModal, setShowModal] = useState(false);
@@ -30,6 +31,8 @@ int main() {
   const [output, setOutput] = useState("");
   const [loadingOutput, setLoadingOutput] = useState(false);
   const [language, setLanguage] = useState("cpp");
+  const [editor, setEditor] = useState(null);
+  const [monacoInstance, setMonacoInstance] = useState(null);
 
   const languageTemplates = {
     cpp: `#include <bits/stdc++.h>
@@ -55,6 +58,28 @@ int main() {
 
     python: `print("Hello World")`,
   };
+  useEffect(() => {
+    if (!editor || !monacoInstance) return;
+
+  
+    const decorations = inlineComments.map((comment) => ({
+      range: new monacoInstance.Range(comment.line, 1, comment.line, 1),
+
+      options: {
+        glyphMarginClassName:
+          comment.severity === "error"
+            ? "lintmind-error"
+            : comment.severity === "warning"
+              ? "lintmind-warning"
+              : "lintmind-suggestion",
+
+        glyphMarginHoverMessage: {
+          value: comment.message,
+        },
+      },
+    }));
+    editor.deltaDecorations([], decorations);
+  }, [inlineComments, editor, monacoInstance]);
   async function reviewCode() {
     try {
       setLoading(true);
@@ -62,11 +87,12 @@ int main() {
 
       const response = await axios.post(
         `${import.meta.env.VITE_APP_URL}/ai/get-review`,
-        { code ,language},
+        { code, language },
       );
-
-      setReview(response.data);
-
+      // console.log(response.data.summary);
+      setReview(response.data.summary);
+      setInlineComments(response.data.inlineComments);
+      console.log("Inline comments: ", response.data.inlineComments);
       setReviewed(true);
     } catch (err) {
       setReview("Error generating review.");
@@ -93,7 +119,7 @@ int main() {
         },
       );
 
-      console.log(response.data);
+      // console.log(response.data);
 
       setTitle("");
       closeModal();
@@ -126,14 +152,14 @@ int main() {
       );
 
       setOutput(response.data.stdout || response.data.stderr || "No output");
-      setLoadingOutput(false)
+      setLoadingOutput(false);
     } catch (error) {
       console.error("Error:", error);
     }
   }
   function handleCodeChange(value) {
     setCode(value);
-
+    setInlineComments([]);
     setReviewed(false);
   }
 
@@ -158,7 +184,12 @@ int main() {
                 theme="vs-dark"
                 value={code}
                 onChange={handleCodeChange}
+                onMount={(editor, monaco) => {
+                  setEditor(editor);
+                  setMonacoInstance(monaco);
+                }}
                 options={{
+                  glyphMargin: true,
                   fontSize: 16,
                   minimap: { enabled: false },
                   automaticLayout: true,

@@ -668,4 +668,24 @@ main {
 
   z-index: 10000;
   cursor: pointer;
+  }.lintmind-error,
+.lintmind-warning,
+.lintmind-suggestion {
+  transform: scale(0.45);
+  transform-origin: center;
+}
+
+.lintmind-error {
+  background-color: #ff4d4f;
+  border-radius: 50%;
+}
+
+.lintmind-warning {
+  background-color: #faad14;
+  border-radius: 50%;
+}
+
+.lintmind-suggestion {
+  background-color: #1677ff;
+  border-radius: 50%;
 }
