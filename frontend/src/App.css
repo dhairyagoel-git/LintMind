@@ -478,7 +478,7 @@ main {
 
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
 
   z-index: 99999;
 }
@@ -668,7 +668,8 @@ main {
 
   z-index: 10000;
   cursor: pointer;
-  }.lintmind-error,
+}
+.lintmind-error,
 .lintmind-warning,
 .lintmind-suggestion {
   transform: scale(0.45);
@@ -688,4 +689,35 @@ main {
 .lintmind-suggestion {
   background-color: #1677ff;
   border-radius: 50%;
+}
+
+.review-modal {
+  width: 700px;
+
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 12px;
+
+  overflow: hidden;
+}
+
+.modal-body textarea {
+  width: 100%;
+  min-height: 180px;
+
+  padding: 1rem;
+
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 8px;
+
+  color: white;
+  font-size: 1rem;
+
+  resize: vertical;
+}
+
+.modal-body textarea:focus {
+  outline: none;
+  border-color: #5a8cff;
 }

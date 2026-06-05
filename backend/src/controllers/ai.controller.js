@@ -1,25 +1,39 @@
 const aiService = require("../services/ai.service");
 
 module.exports.getReview = async (req, res) => {
-  const code = req.body.code;
-  const language = req.body.language;
-  if (!code) {
-    return res.status(404).send("Prompt is required");
+  try {
+    const { code, language, problemDescription } = req.body;
+
+    if (!code) {
+      return res.status(400).json({
+        message: "Code is required",
+      });
+    }
+
+    const numberedCode = code
+      .split("\n")
+      .map((line, index) => `${index + 1}: ${line}`)
+      .join("\n");
+
+    const response = await aiService(
+      numberedCode,
+      language,
+      problemDescription,
+    );
+
+    const cleaned = response
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
+    const review = JSON.parse(cleaned);
+
+    res.json(review);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to generate review",
+    });
   }
-//   console.log(code);
-  const numberedCode = code
-    .split("\n")
-    .map((line, index) => `${index + 1}: ${line}`)
-    .join("\n");
-    console.log(numberedCode)
-  const response = await aiService(numberedCode, language);
-
-  const cleaned = response
-    .replace(/```json/g, "")
-    .replace(/```/g, "")
-    .trim();
-
-  const review = JSON.parse(cleaned);
-  console.log(review)
-  res.json(review);
 };

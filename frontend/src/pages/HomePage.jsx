@@ -34,6 +34,8 @@ int main() {
   const [language, setLanguage] = useState("cpp");
   const [editor, setEditor] = useState(null);
   const [monacoInstance, setMonacoInstance] = useState(null);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [problemDescription, setProblemDescription] = useState("");
 
   const languageTemplates = {
     cpp: `#include <bits/stdc++.h>
@@ -80,14 +82,20 @@ int main() {
     }));
     editor.deltaDecorations([], decorations);
   }, [inlineComments, editor, monacoInstance]);
-  async function reviewCode() {
+  async function generateReview() {
     try {
       setLoading(true);
       setReview("");
+
       const token = localStorage.getItem("token");
+      setShowReviewModal(false);
       const response = await axios.post(
         `${import.meta.env.VITE_APP_URL}/ai/get-review`,
-        { code, language },
+        {
+          code,
+          language,
+          problemDescription,
+        },
         {
           headers: token
             ? {
@@ -96,11 +104,13 @@ int main() {
             : {},
         },
       );
-      // console.log(response.data.summary);
+
       setReview(response.data.summary);
       setInlineComments(response.data.inlineComments);
-      console.log("Inline comments: ", response.data.inlineComments);
       setReviewed(true);
+
+      setProblemDescription("");
+      setShowReviewModal(false);
     } catch (error) {
       if (
         error.response?.data?.message ===
@@ -139,6 +149,9 @@ int main() {
     } catch (error) {
       console.log(error.response?.data || error.message);
     }
+  }
+  function openReviewModal() {
+    setShowReviewModal(true);
   }
   function openTitleModal() {
     setShowModal(true);
@@ -245,7 +258,7 @@ int main() {
             Save Code
           </button>
           <button
-            onClick={reviewCode}
+            onClick={openReviewModal}
             className="review"
             disabled={reviewed || loading}
           >
@@ -291,6 +304,48 @@ int main() {
 
               <div className="modal-actions">
                 <button onClick={saveCode}>Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {showReviewModal && (
+        <div className="modal-overlay">
+          <div
+            className={`review-modal ${
+              closing ? "modal-slide-up" : "modal-slide-down"
+            }`}
+          >
+            <div className="modal-header">
+              <h2>AI Review</h2>
+
+              <button
+                className="close-btn"
+                onClick={() => setShowReviewModal(false)}
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <label>Problem Title / Description (Optional)</label>
+
+              <textarea
+                value={problemDescription}
+                onChange={(e) => setProblemDescription(e.target.value)}
+                placeholder="Example:
+
+Two Sum
+
+or
+
+Leetcode 238 Product of Array Except Self
+
+or paste the full problem statement..."
+              />
+
+              <div className="modal-actions">
+                <button onClick={generateReview}>Generate Review</button>
               </div>
             </div>
           </div>
