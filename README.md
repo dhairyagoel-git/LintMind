@@ -11,11 +11,13 @@ The platform leverages Large Language Models (LLMs) to identify bugs, suggest op
 ### AI Code Reviews
 
 * Automated code analysis using LLMs
+* 4 Language compiler support
 * Bug detection and issue identification
 * Performance and optimization suggestions
 * Readability and maintainability improvements
 * Production-level code recommendations
 * Complexity analysis and best-practice checks
+* Save your code and reviews for future reference
 
 ### Code Execution
 
