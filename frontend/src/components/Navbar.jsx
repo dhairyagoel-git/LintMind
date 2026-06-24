@@ -48,17 +48,17 @@ const Navbar = () => {
 
       {/* RIGHT — Controls */}
       <div className="navbar-controls">
-        {/* Theme Toggle */}
-        <button
+
+        {/* <button
           className="navbar-btn theme-btn"
           onClick={toggleTheme}
           title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
           aria-label="Toggle theme"
         >
           <span className="theme-icon">{theme === "dark" ? "☀️" : "🌙"}</span>
-          {/* <span className="btn-label">{theme === "dark" ? "Light" : "Dark"}</span> */}
-        </button>
-
+          <span className="btn-label">{theme === "dark" ? "Light" : "Dark"}</span>
+        </button> */}
+  
         {/* Auth Button / Profile */}
         {loggedIn ? (
           <div className="profile-wrapper">

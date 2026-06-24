@@ -21,12 +21,12 @@ module.exports.getReview = async (req, res) => {
       problemDescription,
     );
 
-    const cleaned = response
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
+    // const cleaned = response
+    //   .replace(/```json/g, "")
+    //   .replace(/```/g, "")
+    //   .trim();
 
-    const review = JSON.parse(cleaned);
+    const review = JSON.parse(response);
 
     res.json(review);
   } catch (error) {

@@ -7,7 +7,7 @@ module.exports.runCode = async (req, res) => {
       java: 62,
       python: 71,
       javascript: 63,
-      c: 50
+      c: 50,
     };
 
     const { code, language } = req.body;
@@ -27,33 +27,39 @@ module.exports.runCode = async (req, res) => {
         message: "Unsupported language",
       });
     }
+    
+    const encodedCode = Buffer.from(code).toString("base64");
 
     const submission = await axios.post(
-      "https://ce.judge0.com/submissions?base64_encoded=false&wait=true",
+      `${process.env.JUDGE_URL}/submissions?base64_encoded=true&wait=true`, 
       {
-        source_code: code,
+        source_code: encodedCode, 
         language_id: languageId,
       },
       {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     const result = submission.data;
+    // console.log(result);
 
-    console.log(result);
+    
+    const decode = (str) =>
+      str ? Buffer.from(str, "base64").toString("utf-8") : null;
 
     res.status(200).json({
       success: true,
-      stdout: result.stdout,
-      stderr: result.stderr,
-      compile_output: result.compile_output,
-      status: result.status?.description,
+      stdout: decode(result.stdout),
+      stderr: decode(result.stderr),              
+      compile_output: decode(result.compile_output), 
       time: result.time,
       memory: result.memory,
+      description : result.status.description
     });
+    
   } catch (error) {
     console.log(error.response?.data || error.message);
 

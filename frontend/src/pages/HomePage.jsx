@@ -176,8 +176,8 @@ int main() {
           language,
         },
       );
-
-      setOutput(response.data.stdout || response.data.stderr || "No output");
+      // console.log(response.data)
+      setOutput(response.data.stdout || response.data.stderr || response.data.description + "\n" + response.data.compile_output  ||  "No output");
       setLoadingOutput(false);
     } catch (error) {
       console.error("Error:", error);
