@@ -14,12 +14,12 @@ function HomePage() {
   const [code, setCode] = useState(
     location.state?.code ||
       `#include <bits/stdc++.h>
-using namespace std;
+  using namespace std;
 
-int main() {
-    cout << "Hello World";
-    return 0;
-}`,
+  int main() {
+      cout << "Hello World";
+      return 0;
+  }`,
   );
 
   const [review, setReview] = useState(location.state?.review || "");
@@ -36,28 +36,29 @@ int main() {
   const [monacoInstance, setMonacoInstance] = useState(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [problemDescription, setProblemDescription] = useState("");
+  const [mobileTab, setMobileTab] = useState("editor");
 
   const languageTemplates = {
     cpp: `#include <bits/stdc++.h>
-using namespace std;
+  using namespace std;
 
-int main() {
-    cout << "Hello World";
-    return 0;
-}`,
+  int main() {
+      cout << "Hello World";
+      return 0;
+  }`,
 
     c: `#include <stdio.h>
 
-int main() {
-    printf("Hello World");
-    return 0;
-}`,
+  int main() {
+      printf("Hello World");
+      return 0;
+  }`,
 
     java: `public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello World");
-    }
-}`,
+      public static void main(String[] args) {
+          System.out.println("Hello World");
+      }
+  }`,
 
     python: `print("Hello World")`,
   };
@@ -177,7 +178,12 @@ int main() {
         },
       );
       // console.log(response.data)
-      setOutput(response.data.stdout || response.data.stderr || response.data.description + "\n" + response.data.compile_output  ||  "No output");
+      setOutput(
+        response.data.stdout ||
+          response.data.stderr ||
+          response.data.description + "\n" + response.data.compile_output ||
+          "No output",
+      );
       setLoadingOutput(false);
     } catch (error) {
       console.error("Error:", error);
@@ -192,8 +198,11 @@ int main() {
   return (
     <>
       {/* <Navbar /> */}
-      <main>
-        <div className="left">
+      <main style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
+        <div
+          className="left"
+          style={{ display: mobileTab === "review" ? "none" : undefined }}
+        >
           <div className="editor-container">
             <div className="code">
               <Editor
@@ -266,17 +275,43 @@ int main() {
           </button>
         </div>
 
-        <div className="right">
+        <div
+          className="right"
+          style={{ display: mobileTab === "editor" ? "none" : undefined }}
+        >
           {loading ? (
             <div className="loading">
               <h2>Analyzing Code...</h2>
               <p>LintMind AI is reviewing your code.</p>
             </div>
-          ) : (
+          ) : review ? (
             <Markdown rehypePlugins={[rehypeHighlight]}>{review}</Markdown>
+          ) : (
+            <div className="review-empty">
+              {/* <div className="review-empty-icon">⚡</div> */}
+              <h2>No review yet</h2>
+              <p>
+                Click the <strong>Review</strong> button to get an AI-powered
+                analysis of your code.
+              </p>
+            </div>
           )}
         </div>
       </main>
+      <div className="mobile-tab-bar">
+        <button
+          className={`mobile-tab ${mobileTab === "editor" ? "active" : ""}`}
+          onClick={() => setMobileTab("editor")}
+        >
+          Editor
+        </button>
+        <button
+          className={`mobile-tab ${mobileTab === "review" ? "active" : ""}`}
+          onClick={() => setMobileTab("review")}
+        >
+          Review {review && !loading ? "●" : ""}
+        </button>
+      </div>
       {showModal && (
         <div className="modal-overlay">
           <div
@@ -335,13 +370,13 @@ int main() {
                 onChange={(e) => setProblemDescription(e.target.value)}
                 placeholder="Example:
 
-Two Sum
+  Two Sum
 
-or
+  or
 
-Leetcode 238 Product of Array Except Self
+  Leetcode 238 Product of Array Except Self
 
-or paste the full problem statement..."
+  or paste the full problem statement..."
               />
 
               <div className="modal-actions">

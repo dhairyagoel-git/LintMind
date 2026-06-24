@@ -176,12 +176,12 @@ main {
   color: #ff7b72;
 }
 .right pre,
-  .right code,
-  .right p,
-  .right li,
-  /* .right h1, */
-  /* .right h2,  */
-  .right h3 {
+    .right code,
+    .right p,
+    .right li,
+    /* .right h1, */
+    /* .right h2,  */
+    .right h3 {
   text-align: left;
 }
 
@@ -458,9 +458,9 @@ main {
   .navbar {
     padding: 0 0.85rem;
   }
-  .btn-label {
-    display: none;
-  }
+  /* .btn-label {
+        display: none;
+      } */
   .navbar-btn {
     padding: 0.4rem 0.55rem;
   }
@@ -720,4 +720,289 @@ main {
 .modal-body textarea:focus {
   outline: none;
   border-color: #5a8cff;
+}
+/* ── Mobile Responsive ── */
+@media (max-width: 768px) {
+  html,
+  body,
+  #root {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  main {
+    flex-direction: column;
+    padding: 0;
+    gap: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .left {
+    flex: 1;
+    height: 100%;
+    border-radius: 0;
+    border: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .editor-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .code {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .output-panel {
+    height: 150px;
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+
+  /* .right {
+      display: none;
+    } */
+
+  /* ── Top control bar ── */
+  .language-select {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    right: auto;
+    bottom: auto;
+    z-index: 10001;
+    font-size: 11px;
+    padding: 0.25rem 0.4rem;
+    height: 28px;
+    background: #2a2a2a;
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: white;
+  }
+
+  .run-code {
+    position: absolute;
+    top: 10px;
+    left: 90px;
+    right: auto;
+    bottom: auto;
+    z-index: 10001;
+    padding: 0 10px;
+    height: 28px;
+    font-size: 11px;
+    border-radius: 5px;
+  }
+
+  .save-code {
+    position: absolute;
+    top: 10px;
+    left: 162px;
+    right: auto;
+    bottom: auto;
+    z-index: 10001;
+    padding: 0 10px;
+    height: 28px;
+    font-size: 11px;
+    border-radius: 5px;
+  }
+
+  .review {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    bottom: auto;
+    z-index: 10001;
+    padding: 0 14px;
+    height: 28px;
+    font-size: 11px;
+    border-radius: 5px;
+  }
+
+  /* Push editor down so controls don't overlap code */
+  .code {
+    padding-top: 48px;
+  }
+
+  /* Modals full-width */
+  .save-modal,
+  .review-modal {
+    width: 94vw;
+    margin: 0;
+  }
+
+  .modal-body textarea {
+    min-height: 120px;
+  }
+  .dropdown {
+    position: fixed;
+    top: 100px; /* exactly the navbar height */
+    right: 12px;
+    left: auto;
+    width: calc(100vw - 24px);
+    max-width: 340px;
+    z-index: 99999;
+  }
+
+  .editor-container {
+    padding-bottom: 0; /* buttons are fixed, not inside this flow */
+  }
+  .right {
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    border-radius: 0;
+    border: none;
+    overflow-y: auto;
+    padding-bottom: 56px;
+  }
+
+  .left {
+    padding-bottom: 56px;
+  }
+}
+
+/* Mobile tab bar — hidden on desktop */
+.mobile-tab-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-tab-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: #161616;
+    border-top: 1px solid #2a2a2a;
+    z-index: 10002;
+  }
+
+  .mobile-tab {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: #777;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .mobile-tab.active {
+    color: #fff;
+    border-top: 2px solid #fff;
+  }
+}
+/* ── Desktop: restore default side-by-side layout ── */
+@media (min-width: 769px) {
+  .left {
+    flex: 1.5;
+    height: 100%;
+    border-radius: 12px;
+    border: 1px solid #333;
+    padding-bottom: 0;
+  }
+
+  .right {
+    display: block !important;
+    flex: 1;
+    height: 100%;
+    border-radius: 12px;
+    border: 1px solid #333;
+    padding-bottom: 0;
+    overflow-y: auto;
+  }
+
+  .language-select {
+    position: absolute;
+    top: 14px;
+    right: 230px;
+    left: auto;
+    bottom: auto;
+    height: auto;
+    font-size: 12px;
+    padding: 0.3rem 0.6rem;
+    background: #1e1e1e;
+    border: 1px solid #444;
+  }
+
+  .run-code {
+    position: absolute;
+    top: 14px;
+    right: 120px;
+    left: auto;
+    bottom: auto;
+    height: auto;
+    font-size: 12px;
+    padding: 0.3rem 0.8rem;
+  }
+
+  .save-code {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    left: auto;
+    bottom: auto;
+    height: auto;
+    font-size: 12px;
+    padding: 0.3rem 0.8rem;
+  }
+
+  .review {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    top: auto;
+    left: auto;
+    height: auto;
+    font-size: 13px;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+  }
+
+  .mobile-tab-bar {
+    display: none !important;
+  }
+
+  .code {
+    padding-top: 1rem;
+  }
+}
+.review-empty {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.review-empty h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.review-empty p {
+  color: #777;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  max-width: 260px;
+  margin: 0;
+}
+
+.review-empty strong {
+  color: #aaa;
 }
