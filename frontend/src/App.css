@@ -18,7 +18,7 @@ main {
   height: 100%;
   width: 100%;
   display: flex;
-  gap: 1rem;
+  gap: .1rem;
   padding: 1rem;
 }
 
@@ -905,7 +905,7 @@ main {
 /* ── Desktop: restore default side-by-side layout ── */
 @media (min-width: 769px) {
   .left {
-    flex: 1.5;
+    /* flex: 1.5; */
     height: 100%;
     border-radius: 12px;
     border: 1px solid #333;
@@ -914,7 +914,7 @@ main {
 
   .right {
     display: block !important;
-    flex: 1;
+    /* flex: 1; */
     height: 100%;
     border-radius: 12px;
     border: 1px solid #333;
@@ -1005,4 +1005,102 @@ main {
 
 .review-empty strong {
   color: #aaa;
+}
+/* ─────────────────────────────────────────────────────────────
+   DRAG HANDLES  — add these rules to your existing App.css
+   ───────────────────────────────────────────────────────────── */
+
+/* Horizontal drag handle — between left (editor) and right (review) panels */
+.resize-handle-h {
+  width: 8px;
+  flex-shrink: 0;
+  background: transparent;
+  cursor: col-resize;
+  position: relative;
+  border-radius: 4px;
+  transition: background 0.15s;
+  z-index: 50;
+}
+
+.resize-handle-h::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 48px;
+  background: #444;
+  border-radius: 2px;
+  transition: background 0.15s, height 0.15s;
+}
+
+.resize-handle-h:hover::after,
+.resize-handle-h:active::after {
+  background: #888;
+  height: 64px;
+}
+
+.resize-handle-h:hover,
+.resize-handle-h:active {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Vertical drag handle — between Monaco editor and output panel */
+.resize-handle-v {
+  height: 4px;
+  flex-shrink: 0;
+  background:  #1e1e1e;
+  cursor: row-resize;
+  position: relative;
+  border-top: 1px solid #2a2a2a;
+  border-bottom: 1px solid #2a2a2a;
+  transition: background 0.15s;
+  z-index: 50;
+}
+
+.resize-handle-v::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 2px;
+  background: #444;
+  border-radius: 2px;
+  transition: background 0.15s, width 0.15s;
+}
+
+.resize-handle-v:hover::after,
+.resize-handle-v:active::after {
+  background: #888;
+  width: 64px;
+}
+
+.resize-handle-v:hover,
+.resize-handle-v:active {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Hide both handles on mobile — layout is tab-based there */
+@media (max-width: 768px) {
+  .resize-handle-h,
+  .resize-handle-v {
+    display: none;
+  }
+}
+
+/* Make main a flex row so the horizontal handle sits between panels */
+main {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+/* Left and right panels now get their flex values from inline styles (set by JS),
+   but keep height: 100% and overflow so nothing breaks */
+.left,
+.right {
+  min-width: 0; /* required for flex children to shrink below content size */
 }
